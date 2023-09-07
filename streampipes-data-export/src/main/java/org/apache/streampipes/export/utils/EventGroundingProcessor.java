@@ -87,7 +87,7 @@ public class EventGroundingProcessor {
 
   private PulsarTransportProtocol makePulsarProtocol() {
     var protocol = new PulsarTransportProtocol();
-    protocol.setBrokerHostname(BackendConfig.INSTANCE.getNatsHost());
+    protocol.setBrokerHostname(BackendConfig.INSTANCE.getPulsarUrl());
     return protocol;
   }
 
