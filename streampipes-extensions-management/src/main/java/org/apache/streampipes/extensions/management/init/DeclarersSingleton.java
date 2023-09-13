@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.management.init;
 
+import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -30,6 +31,7 @@ import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvi
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.util.Cloner;
@@ -151,8 +153,12 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
   public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
     SpProtocolManager.INSTANCE.register(protocol);
+    TransportProtocol transportProtocol = protocol.getTransportProtocol();
+    if (transportProtocol instanceof PulsarTransportProtocol) {
+      transportProtocol.setBrokerHostname(BackendConfig.INSTANCE.getPulsarUrl());
+    }
     this.supportedProtocols.put(protocol.getTransportProtocolClass(),
-        protocol.getTransportProtocol());
+        transportProtocol);
   }
 
   public void registerProtocols(List<SpProtocolDefinitionFactory<?>> protocols) {

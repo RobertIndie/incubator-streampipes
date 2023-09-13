@@ -31,7 +31,6 @@ public class PulsarTransportProtocol extends TransportProtocol {
 
   public PulsarTransportProtocol() {
     super();
-    this.setBrokerHostname("pulsar://localhost:6650");
   }
 
   @Override

@@ -58,6 +58,11 @@ public class PulsarConsumer implements EventConsumer {
             @Override
             public void received(Consumer<byte[]> consumer, Message<byte[]> msg) {
               eventProcessor.onEvent(msg.getData());
+              try {
+                consumer.acknowledge(msg);
+              } catch (PulsarClientException e) {
+                throw new SpRuntimeException(e);
+              }
             }
           })
           .subscribe();
